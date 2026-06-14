@@ -51,9 +51,9 @@
   pole.rotation.z = 0.1;
   scene.add(pole);
 
-  /* scroll + mus */
+  /* scroll (hele sidens progresjon) + mus */
   var raw = 0, spL = 0, mx = 0, my = 0, cmx = 0, cmy = 0;
-  function onScroll() { raw = Math.min(Math.max(scrollY / (innerHeight * 0.85), 0), 1); }
+  function onScroll() { var max = document.documentElement.scrollHeight - innerHeight; raw = max > 0 ? Math.min(Math.max(scrollY / max, 0), 1) : 0; }
   addEventListener("scroll", onScroll, { passive: true });
   addEventListener("mousemove", function (e) { mx = e.clientX / innerWidth - 0.5; my = e.clientY / innerHeight - 0.5; });
   onScroll();
@@ -72,29 +72,24 @@
     requestAnimationFrame(frame);
     if (document.hidden) return;
     var t = clock.getElapsedTime();
-    spL += (raw - spL) * 0.09;
-    var p = ease(spL);
+    spL += (raw - spL) * 0.1;          // mykt etterslep => smooth «loading»
+    var p = spL;                        // lineær med scroll, som en progress
     cmx += (mx - cmx) * 0.06; cmy += (my - cmy) * 0.06;
 
-    /* synlig ramme ved z=0 -> regn ut hjørne-koordinater */
+    /* synlig ramme ved z=0 */
     var halfH = Math.tan((camera.fov * Math.PI / 180) / 2) * camera.position.z;
     var halfW = halfH * camera.aspect;
     var mobile = innerWidth < 760;
 
-    // p=0: liten accent oppe til høyre (ikke i veien) · p=1: pinnet i hjørnet
-    var x0 = halfW * (mobile ? 0.52 : 0.60), y0 = halfH * (mobile ? 0.52 : 0.36), s0 = mobile ? 0.34 : 0.50;
-    var x1 = halfW * (mobile ? 0.64 : 0.78), y1 = halfH * 0.66, s1 = mobile ? 0.38 : 0.46;
-    var bob = Math.sin(t * 1.2) * (1 - p) * 0.08;
+    /* stangen følger scroll loddrett: topp -> bunn, pinnet til høyre */
+    pole.position.x = halfW * (mobile ? 0.76 : 0.84);
+    pole.position.y = lerp(halfH * 0.60, -halfH * 0.60, p);
+    pole.scale.setScalar(mobile ? 0.32 : 0.42);
 
-    pole.position.x = lerp(x0, x1, p);
-    pole.position.y = lerp(y0, y1, p) + bob;
-    pole.scale.setScalar(lerp(s0, s1, p));
-
-    if (!reduced) tex.offset.y -= 0.005 + spL * 0.012;
-    pole.rotation.y = t * 0.3 + spL * 1.4 + cmx * 0.3;
+    if (!reduced) tex.offset.y -= 0.006 + p * 0.01;
+    pole.rotation.y = t * 0.45 + cmx * 0.3;   // spinner som et ekte skilt
     pole.rotation.z = 0.1 + cmy * 0.04;
-    camera.position.x += (cmx * 0.5 - camera.position.x) * 0.05;
-    camera.lookAt(camera.position.x, 0, 0);
+    camera.lookAt(0, 0, 0);
 
     renderer.render(scene, camera);
   }
