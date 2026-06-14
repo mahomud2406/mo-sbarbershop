@@ -32,6 +32,9 @@
   <div class="cursor" id="cursor"></div>
   <div class="cursor-dot" id="cursorDot"></div>
 
+  <!-- flytende 3D-barberstang som følger scroll -->
+  <div class="pole-stage" id="poleStage"><canvas id="gl"></canvas></div>
+
   <div class="loader" id="loader">
     <img class="loader__logo" src="assets/logo.jpg" alt="Mo's Barbershop" />
     <div class="loader__bar"><span></span></div>
@@ -75,9 +78,7 @@
             <a href="#tjenester" class="btn btn--line" data-cursor data-magnetic>Se priser</a>
           </div>
         </div>
-        <div class="hero__stage" id="heroStage">
-          <canvas id="gl"></canvas>
-        </div>
+        <div class="hero__stage" aria-hidden="true"></div>
       </div>
       <div class="hero__foot">
         <div class="r"><b data-count="4.9" data-decimals="1">0</b><i>★ snittvurdering</i></div>

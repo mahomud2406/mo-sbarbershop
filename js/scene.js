@@ -1,35 +1,35 @@
 /* ============================================================
-   Mo's Barbershop — 3D hero (lett tema, til en viss grad)
-   Én forseggjort barberstang i merkevarens farger (marineblå/
-   rød/krem) på kremfarget scene. Avgrenset til heroen, dempet
-   og smooth. Three.js r128.
+   Mo's Barbershop — 3D barberstang som følger scroll
+   Stangen ligger i en FIXED flytende boks. Øverst sitter den i
+   heroen; når du scroller glir den smooth opp i øvre høyre hjørne
+   og blir der, lett bevegelig med scroll. Merkefarger, dempet,
+   til en viss grad. Three.js r128.
    ============================================================ */
 (function () {
   "use strict";
   var canvas = document.getElementById("gl");
-  var stage = document.getElementById("heroStage");
+  var stage = document.getElementById("poleStage");
   if (!canvas || !stage || typeof THREE === "undefined") return;
 
   var reduced = matchMedia("(prefers-reduced-motion: reduce)").matches;
-  function size() { return { w: stage.clientWidth, h: stage.clientHeight }; }
+  function box() { return { w: stage.clientWidth, h: stage.clientHeight }; }
 
   var scene = new THREE.Scene();
-  var camera = new THREE.PerspectiveCamera(40, 1, 0.1, 100);
-  camera.position.set(0, 0, 11);
+  var camera = new THREE.PerspectiveCamera(38, 1, 0.1, 100);
+  camera.position.set(0, 0, 12);   // litt lenger unna => litt mindre stang
 
   var renderer;
   try { renderer = new THREE.WebGLRenderer({ canvas: canvas, antialias: true, alpha: true }); }
   catch (e) { return; }
   renderer.setPixelRatio(Math.min(devicePixelRatio, 1.5));
 
-  /* lyst, mykt lys */
   scene.add(new THREE.AmbientLight(0xffffff, 0.85));
   var key = new THREE.DirectionalLight(0xffffff, 0.9); key.position.set(4, 8, 9); scene.add(key);
   var fill = new THREE.DirectionalLight(0xcfe0ff, 0.4); fill.position.set(-6, -2, 4); scene.add(fill);
 
-  /* myk kontaktskygge under stangen */
-  var shadow = new THREE.Sprite(new THREE.SpriteMaterial({ map: soft(), color: 0x20364e, transparent: true, opacity: 0.18, depthWrite: false }));
-  shadow.scale.set(7, 2.4, 1); shadow.position.set(0, -3.5, -1); scene.add(shadow);
+  /* myk skygge under */
+  var shadow = new THREE.Sprite(new THREE.SpriteMaterial({ map: soft(), color: 0x20364e, transparent: true, opacity: 0.16, depthWrite: false }));
+  shadow.scale.set(6.5, 2.2, 1); shadow.position.set(0, -3.4, -1); scene.add(shadow);
 
   /* barberstang i merkefarger */
   var pole = new THREE.Group();
@@ -40,12 +40,10 @@
     new THREE.CylinderGeometry(1, 1, 5, 64, 1, true),
     new THREE.MeshStandardMaterial({ map: tex, roughness: 0.42, metalness: 0.05 })
   ));
-  // tynt glassaktig ytterlag
   pole.add(new THREE.Mesh(
     new THREE.CylinderGeometry(1.06, 1.06, 5, 64, 1, true),
     new THREE.MeshStandardMaterial({ color: 0xffffff, transparent: true, opacity: 0.12, roughness: 0.08, metalness: 0.3, side: THREE.DoubleSide })
   ));
-  // børstet metall-endestykker
   var metal = new THREE.MeshStandardMaterial({ color: 0xb8c0c8, roughness: 0.3, metalness: 0.9 });
   [2.7, -2.7].forEach(function (y) {
     var cap = new THREE.Group();
@@ -55,40 +53,52 @@
     cap.position.y = y; if (y < 0) cap.rotation.x = Math.PI;
     pole.add(cap);
   });
-  pole.rotation.z = 0.12;
+  pole.rotation.z = 0.1;
   scene.add(pole);
 
-  /* scroll (hero-relativ) + mus, dempet */
-  var sp = 0, spL = 0, mx = 0, my = 0, cmx = 0, cmy = 0;
-  function onScroll() { sp = Math.min(Math.max(scrollY / innerHeight, 0), 1); }
+  /* scroll + mus */
+  var raw = 0, spL = 0, mx = 0, my = 0, cmx = 0, cmy = 0;
+  function onScroll() { raw = Math.min(Math.max(scrollY / (innerHeight * 0.85), 0), 1); }
   addEventListener("scroll", onScroll, { passive: true });
   addEventListener("mousemove", function (e) { mx = e.clientX / innerWidth - 0.5; my = e.clientY / innerHeight - 0.5; });
   onScroll();
 
   function resize() {
-    var s = size();
-    renderer.setSize(s.w, s.h, false);
-    camera.aspect = s.w / s.h; camera.updateProjectionMatrix();
-    pole.scale.setScalar(s.w < 720 ? 0.86 : 1);
+    var b = box();
+    renderer.setSize(b.w, b.h, false);
+    camera.aspect = b.w / b.h; camera.updateProjectionMatrix();
   }
   addEventListener("resize", resize); resize();
+
+  function lerp(a, b, t) { return a + (b - a) * t; }
+  function ease(t) { return 1 - Math.pow(1 - t, 3); } // easeOutCubic
 
   var clock = new THREE.Clock();
   function frame() {
     requestAnimationFrame(frame);
-    if (scrollY > innerHeight * 1.15) return; // pause forbi hero
+    if (document.hidden) return;
+
     var t = clock.getElapsedTime();
-    spL += (sp - spL) * 0.08;
+    spL += (raw - spL) * 0.09;        // dempet => smooth reise
+    var p = ease(spL);
     cmx += (mx - cmx) * 0.06; cmy += (my - cmy) * 0.06;
 
-    if (!reduced) tex.offset.y -= 0.005 + spL * 0.014;
-    pole.rotation.y = t * 0.28 + spL * 2 + cmx * 0.35;
-    pole.rotation.z = 0.12 + cmy * 0.05;
-    pole.position.y = spL * 0.5;
-    camera.position.x += (cmx * 0.9 - camera.position.x) * 0.06;
-    camera.position.y += (-cmy * 0.6 - camera.position.y) * 0.06;
-    camera.lookAt(0, pole.position.y, 0);
-    shadow.material.opacity = 0.18 - spL * 0.1;
+    /* posisjon/størrelse på den flytende boksen (origin: top right) */
+    var W = innerWidth, H = innerHeight;
+    var x0 = -W * 0.03, y0 = H * 0.30, s0 = 1.0;   // i heroen (litt inn fra høyre, vertikalt midtstilt)
+    var x1 = -16,       y1 = 74,       s1 = 0.58;  // pinnet i øvre høyre hjørne, under navbaren
+    var x = lerp(x0, x1, p), y = lerp(y0, y1, p), s = lerp(s0, s1, p);
+    var bob = Math.sin(t * 1.2) * (1 - p) * 6;     // lett pust mens den er i heroen
+    stage.style.transform = "translate(" + x + "px," + (y + bob) + "px) scale(" + s + ")";
+
+    /* rotasjon — raskere mens du scroller, dempet musepåvirkning */
+    if (!reduced) tex.offset.y -= 0.005 + spL * 0.012;
+    pole.rotation.y = t * 0.3 + spL * 1.4 + cmx * 0.3;
+    pole.rotation.z = 0.1 + cmy * 0.04;
+    camera.position.x += (cmx * 0.7 - camera.position.x) * 0.06;
+    camera.position.y += (-cmy * 0.5 - camera.position.y) * 0.06;
+    camera.lookAt(0, 0, 0);
+    shadow.material.opacity = 0.16 * (1 - p * 0.7);
 
     renderer.render(scene, camera);
   }
@@ -96,8 +106,7 @@
 
   function stripes() {
     var c = document.createElement("canvas"); c.width = c.height = 128;
-    var g = c.getContext("2d");
-    var cols = ["#c0432f", "#f4ead4", "#20364e", "#f4ead4"], h = 32;
+    var g = c.getContext("2d"), cols = ["#c0432f", "#f4ead4", "#20364e", "#f4ead4"], h = 32;
     for (var i = 0; i < 4; i++) { g.fillStyle = cols[i]; g.fillRect(0, i * h, 128, h); }
     var tx = new THREE.CanvasTexture(c); tx.anisotropy = 4; return tx;
   }
