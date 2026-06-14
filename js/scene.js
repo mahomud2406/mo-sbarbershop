@@ -81,10 +81,10 @@
     var halfW = halfH * camera.aspect;
     var mobile = innerWidth < 760;
 
-    /* stangen følger scroll loddrett: topp -> bunn, pinnet til høyre */
-    pole.position.x = halfW * (mobile ? 0.76 : 0.84);
-    pole.position.y = lerp(halfH * 0.60, -halfH * 0.60, p);
-    pole.scale.setScalar(mobile ? 0.32 : 0.42);
+    /* stangen som scrollbar-indikator: følger scroll loddrett, pinnet til høyre kant */
+    pole.position.x = halfW * (mobile ? 0.82 : 0.88);
+    pole.position.y = lerp(halfH * 0.72, -halfH * 0.72, p);
+    pole.scale.setScalar(mobile ? 0.24 : 0.30);
 
     if (!reduced) tex.offset.y -= 0.006 + p * 0.01;
     pole.rotation.y = t * 0.45 + cmx * 0.3;   // spinner som et ekte skilt
