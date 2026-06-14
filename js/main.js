@@ -100,8 +100,8 @@
   (function scrollJourney() {
     function clamp(v, a, b) { return Math.max(a, Math.min(b, v)); }
     var parEls = [].slice.call(document.querySelectorAll("[data-par]"));
-    var reel = document.querySelector(".reel");
-    var reelWords = reel ? [].slice.call(reel.querySelectorAll("[data-word]")) : [];
+    var journey = document.querySelector(".journey");
+    var stops = journey ? [].slice.call(journey.querySelectorAll("[data-stop]")) : [];
     var hs = document.querySelector(".hscroll");
     var track = document.querySelector("[data-htrack]");
 
@@ -117,18 +117,21 @@
         el.style.transform = "translate3d(0," + (prog * sp * -150) + "px,0) scale(1.18)";
       }
 
-      // ord-reel
-      if (reel && reelWords.length) {
-        var rr = reel.getBoundingClientRect();
-        var total = reel.offsetHeight - vh;
-        var p = clamp(-rr.top / total, 0, 1);
-        var n = reelWords.length;
-        for (var w = 0; w < n; w++) {
-          var center = (w + 0.5) / n;
-          var on = clamp(1 - Math.abs(p - center) * n * 1.25, 0, 1);
-          var word = reelWords[w];
-          word.style.opacity = on;
-          word.style.transform = "translateY(" + ((p - center) * -70) + "px) scale(" + (0.72 + on * 0.28) + ")";
+      // reise-stopp (kryssfader tekst mens kamera flyr gjennom salongen)
+      if (journey && stops.length) {
+        var jr = journey.getBoundingClientRect();
+        var jtotal = journey.offsetHeight - vh;
+        var jp = jtotal > 0 ? clamp(-jr.top / jtotal, 0, 1) : 0;
+        var n = stops.length, win = 0.62 / n;
+        for (var s = 0; s < n; s++) {
+          var center = (s + 0.5) / n;
+          var d = jp - center;
+          if (s === 0 && jp < center) d = 0;          // hold første synlig på toppen
+          if (s === n - 1 && jp > center) d = 0;       // hold siste synlig til slutt
+          var on = clamp(1 - Math.abs(d) / win, 0, 1);
+          stops[s].style.opacity = on;
+          stops[s].style.transform = "translateY(" + ((jp - center) * -36) + "px)";
+          stops[s].classList.toggle("is-on", on > 0.5);
         }
       }
 

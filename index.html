@@ -58,28 +58,43 @@
     <a href="#kontakt" class="btn btn--red">Bestill time</a>
   </div>
 
+  <div class="pole-stage" id="poleStage"><canvas id="gl"></canvas></div>
+
   <main id="top">
-    <!-- ============ HERO ============ -->
-    <section class="hero">
-      <div class="pole-stage" id="poleStage"><canvas id="gl"></canvas></div>
-      <div class="hero__copy">
-        <div class="eyebrow r"><span class="dot"></span> Linderud Senter · Oslo · est. 2021</div>
-        <h1 class="hero__title">
-          <span class="r">MO&rsquo;S</span>
-          <span class="r outline" style="--d:.06s">BARBERSHOP</span>
-        </h1>
-        <p class="hero__slogan r" style="--d:.14s">Smooth &amp; stylish haircuts</p>
-        <p class="hero__lead r" style="--d:.2s">Presis fade, klassisk fasong og skjegg formet med stødig hånd. Klippekunst midt på Linderud — slik en barbershop skal være.</p>
-        <div class="hero__cta r" style="--d:.28s">
-          <a href="#kontakt" class="btn btn--navy" data-cursor data-magnetic>Bestill din time</a>
-          <a href="#tjenester" class="btn btn--line" data-cursor data-magnetic>Se priser</a>
+    <!-- ============ 3D-REISE GJENNOM SALONGEN ============ -->
+    <section class="journey" id="hero">
+      <div class="journey__sticky">
+        <div class="journey__scrim"></div>
+
+        <div class="journey__stop journey__stop--a" data-stop>
+          <div class="eyebrow"><span class="dot"></span> Linderud Senter · Oslo · est. 2021</div>
+          <h1 class="hero__title">
+            <span>MO&rsquo;S</span>
+            <span class="outline">BARBERSHOP</span>
+          </h1>
+          <p class="hero__slogan">Smooth &amp; stylish haircuts</p>
+          <div class="hero__cta">
+            <a href="#kontakt" class="btn btn--navy" data-cursor data-magnetic>Bestill din time</a>
+            <a href="#tjenester" class="btn btn--line" data-cursor data-magnetic>Se priser</a>
+          </div>
+          <div class="hero__mini">
+            <div><b data-count="4.9" data-decimals="1">0</b><i>★ snitt</i></div>
+            <div><b data-count="3800" data-suffix="+">0</b><i>på Instagram</i></div>
+            <div><b>7</b><i>stoler</i></div>
+          </div>
         </div>
-      </div>
-      <div class="hero__foot">
-        <div class="r"><b data-count="4.9" data-decimals="1">0</b><i>★ snittvurdering</i></div>
-        <div class="r" style="--d:.1s"><b data-count="3800" data-suffix="+">0</b><i>følgere på IG</i></div>
-        <div class="r" style="--d:.2s"><b>6</b><i>dager i uken</i></div>
-        <div class="r" style="--d:.3s"><b>Drop-in</b><i>&amp; timebestilling</i></div>
+
+        <div class="journey__stop journey__stop--b" data-stop>
+          <h2>Fra stol<br>til stol.</h2>
+          <p>Bli med nedover salongen — erfarne hender ved hver stasjon.</p>
+        </div>
+
+        <div class="journey__stop journey__stop--c" data-stop>
+          <h2>Din stol<br>venter.</h2>
+          <a class="btn btn--red btn--lg" href="#kontakt" data-cursor data-magnetic>Bestill time</a>
+        </div>
+
+        <span class="journey__scrollcue">scroll — bli med inn ↓</span>
       </div>
     </section>
 
@@ -90,20 +105,6 @@
         <span>Herreklipp</span><b>✁</b><span>Skin Fade</span><b>✁</b><span>Skjeggtrim</span><b>✁</b><span>Hot Towel Shave</span><b>✁</b><span>Barneklipp</span><b>✁</b><span>Linjering</span><b>✁</b>
       </div>
     </div>
-
-    <!-- ============ REEL (pinnet ord-reise) ============ -->
-    <section class="reel">
-      <div class="reel__sticky">
-        <span class="reel__kicker">Klippekunst, steg for steg</span>
-        <div class="reel__words">
-          <h2 data-word>EN FADE.</h2>
-          <h2 data-word>EN LINJE.</h2>
-          <h2 data-word>ET SKJEGG.</h2>
-          <h2 data-word>EN FØLELSE.</h2>
-        </div>
-        <span class="reel__hint">↓ fortsett</span>
-      </div>
-    </section>
 
     <!-- ============ INTRO SPREAD ============ -->
     <section class="spread">

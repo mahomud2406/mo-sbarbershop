@@ -1,138 +1,163 @@
 /* ============================================================
-   Mo's Barbershop — heftig 3D-bakgrunn i heroen
-   Hovedstang + dybde-stenger, gull-ring, svevende støv,
-   animert farget lys, muse-parallax og lett scroll-respons.
-   Avgrenset til hero-boksen (pauser når du scroller forbi).
-   Merkefarger. Three.js r128.
+   Mo's Barbershop — 3D «reise» gjennom salongen
+   Kamera flyr nedover midtgangen fra stol til stol mens du
+   scroller. Lavpoly barbershop: gulv, vegger, speil, stoler,
+   barberstenger, varmt lys. Merkefarger. Three.js r128.
    ============================================================ */
 (function () {
   "use strict";
   var canvas = document.getElementById("gl");
-  var stage = document.getElementById("poleStage");
-  if (!canvas || !stage || typeof THREE === "undefined") return;
+  var journey = document.querySelector(".journey");
+  if (!canvas || typeof THREE === "undefined") return;
 
   var reduced = matchMedia("(prefers-reduced-motion: reduce)").matches;
-  function box() { return { w: stage.clientWidth || innerWidth, h: stage.clientHeight || innerHeight }; }
 
   var scene = new THREE.Scene();
-  scene.fog = new THREE.FogExp2(0xf4ead4, 0.035);
+  scene.background = null;
+  scene.fog = new THREE.Fog(0xf1e7d0, 14, 46);
 
-  var camera = new THREE.PerspectiveCamera(44, 1, 0.1, 100);
-  camera.position.set(0, 0, 12);
+  var camera = new THREE.PerspectiveCamera(58, innerWidth / innerHeight, 0.1, 120);
+  camera.position.set(0, 0.6, 12);
 
   var renderer;
   try { renderer = new THREE.WebGLRenderer({ canvas: canvas, antialias: true, alpha: true }); }
   catch (e) { return; }
   renderer.setPixelRatio(Math.min(devicePixelRatio, 1.75));
+  renderer.setSize(innerWidth, innerHeight);
 
-  /* lys */
-  scene.add(new THREE.AmbientLight(0xffffff, 0.78));
-  var key = new THREE.DirectionalLight(0xffffff, 0.85); key.position.set(5, 8, 9); scene.add(key);
-  var red = new THREE.PointLight(0xc0432f, 1.3, 30); scene.add(red);     // animeres
-  var blue = new THREE.PointLight(0x3f6fae, 1.1, 30); scene.add(blue);   // animeres
+  /* ---------- materialer ---------- */
+  var matFloor = new THREE.MeshStandardMaterial({ color: 0xded2b6, roughness: 0.85, metalness: 0.05 });
+  var matWall  = new THREE.MeshStandardMaterial({ color: 0xf2e8d2, roughness: 0.95 });
+  var matWall2 = new THREE.MeshStandardMaterial({ color: 0xb89a6a, roughness: 0.9 }); // murvegg-tone
+  var matNavy  = new THREE.MeshStandardMaterial({ color: 0x20364e, roughness: 0.55, metalness: 0.2 });
+  var matLeather = new THREE.MeshStandardMaterial({ color: 0x1b2c40, roughness: 0.5, metalness: 0.15 });
+  var matChrome = new THREE.MeshStandardMaterial({ color: 0xc8cdd2, roughness: 0.25, metalness: 0.95 });
+  var matMirror = new THREE.MeshStandardMaterial({ color: 0xbcd0de, roughness: 0.12, metalness: 0.6 });
+  var matGlow   = new THREE.MeshBasicMaterial({ color: 0xfff2d6 });
 
-  /* delt stripetekstur */
-  function stripes() {
-    var c = document.createElement("canvas"); c.width = c.height = 128;
-    var g = c.getContext("2d"), cols = ["#c0432f", "#f4ead4", "#20364e", "#f4ead4"], h = 32;
-    for (var i = 0; i < 4; i++) { g.fillStyle = cols[i]; g.fillRect(0, i * h, 128, h); }
-    var tx = new THREE.CanvasTexture(c); tx.anisotropy = 4; tx.wrapS = tx.wrapT = THREE.RepeatWrapping;
-    tx.rotation = Math.PI / 4; tx.center.set(0.5, 0.5); return tx;
+  /* ---------- rom ---------- */
+  var AISLE_LEN = 60;
+  var floor = new THREE.Mesh(new THREE.PlaneGeometry(16, AISLE_LEN), matFloor);
+  floor.rotation.x = -Math.PI / 2; floor.position.set(0, -2, -22); scene.add(floor);
+
+  var ceil = new THREE.Mesh(new THREE.PlaneGeometry(16, AISLE_LEN), matWall);
+  ceil.rotation.x = Math.PI / 2; ceil.position.set(0, 5, -22); scene.add(ceil);
+
+  var wallL = new THREE.Mesh(new THREE.PlaneGeometry(AISLE_LEN, 7), matWall2);
+  wallL.rotation.y = Math.PI / 2; wallL.position.set(-5.5, 1.5, -22); scene.add(wallL);
+  var wallR = new THREE.Mesh(new THREE.PlaneGeometry(AISLE_LEN, 7), matWall);
+  wallR.rotation.y = -Math.PI / 2; wallR.position.set(5.5, 1.5, -22); scene.add(wallR);
+
+  var backWall = new THREE.Mesh(new THREE.PlaneGeometry(16, 7), matWall);
+  backWall.position.set(0, 1.5, -52); scene.add(backWall);
+
+  /* ---------- stripetekstur til barberstenger ---------- */
+  function stripeTex() {
+    var c = document.createElement("canvas"); c.width = c.height = 64;
+    var g = c.getContext("2d"), cols = ["#c0432f", "#f4ead4", "#20364e", "#f4ead4"];
+    for (var i = 0; i < 4; i++) { g.fillStyle = cols[i]; g.fillRect(0, i * 16, 64, 16); }
+    var tx = new THREE.CanvasTexture(c); tx.wrapS = tx.wrapT = THREE.RepeatWrapping;
+    tx.repeat.set(1, 4); tx.rotation = Math.PI / 4; tx.center.set(.5, .5); return tx;
   }
-  var metal = new THREE.MeshStandardMaterial({ color: 0xc8cdd2, roughness: 0.28, metalness: 0.92 });
+  var poleTextures = [];
 
-  /* bygg en barberstang (egen tekstur per stang for uavhengig spinn) */
-  function makePole(h) {
+  /* ---------- byggeklosser ---------- */
+  function chair(x, z, faceRight) {
     var g = new THREE.Group();
-    var tex = stripes(); tex.repeat.set(1, h / 1.0);
-    g.userData.tex = tex;
-    g.add(new THREE.Mesh(new THREE.CylinderGeometry(1, 1, h, 56, 1, true),
-      new THREE.MeshStandardMaterial({ map: tex, roughness: 0.42, metalness: 0.06 })));
-    g.add(new THREE.Mesh(new THREE.CylinderGeometry(1.06, 1.06, h, 56, 1, true),
-      new THREE.MeshStandardMaterial({ color: 0xffffff, transparent: true, opacity: 0.1, roughness: 0.08, metalness: 0.3, side: THREE.DoubleSide })));
-    [h / 2 + 0.18, -h / 2 - 0.18].forEach(function (y) {
-      var cap = new THREE.Group();
-      cap.add(new THREE.Mesh(new THREE.CylinderGeometry(1.2, 1.2, 0.5, 40), metal));
-      var dome = new THREE.Mesh(new THREE.SphereGeometry(1.18, 28, 14, 0, 6.2832, 0, Math.PI / 2), metal);
-      dome.position.y = 0.25; cap.add(dome);
-      cap.position.y = y; if (y < 0) cap.rotation.x = Math.PI; g.add(cap);
+    var seat = new THREE.Mesh(new THREE.BoxGeometry(1.5, 0.34, 1.5), matLeather); seat.position.y = 0; g.add(seat);
+    var back = new THREE.Mesh(new THREE.BoxGeometry(1.5, 1.7, 0.28), matLeather); back.position.set(0, 0.95, -0.6); g.add(back);
+    var head = new THREE.Mesh(new THREE.BoxGeometry(0.5, 0.45, 0.22), matLeather); head.position.set(0, 1.95, -0.6); g.add(head);
+    [-0.82, 0.82].forEach(function (ax) {
+      var arm = new THREE.Mesh(new THREE.BoxGeometry(0.22, 0.22, 1.3), matChrome); arm.position.set(ax, 0.4, 0.05); g.add(arm);
     });
+    var col = new THREE.Mesh(new THREE.CylinderGeometry(0.22, 0.34, 1.7, 18), matChrome); col.position.y = -1.05; g.add(col);
+    var disc = new THREE.Mesh(new THREE.CylinderGeometry(0.75, 0.75, 0.12, 26), matChrome); disc.position.y = -1.9; g.add(disc);
+    var foot = new THREE.Mesh(new THREE.BoxGeometry(0.7, 0.12, 0.5), matChrome); foot.position.set(0, -0.7, 0.95); g.add(foot);
+    g.position.set(x, 0, z);
+    g.rotation.y = faceRight ? -Math.PI / 2 + 0.5 : Math.PI / 2 - 0.5; // vendt mot midtgangen
+    g.scale.setScalar(0.92);
+    scene.add(g);
     return g;
   }
 
-  /* hovedstang — sentrert-høyre */
-  var main = makePole(5);
-  main.position.set(2.6, 0, 0); main.rotation.z = 0.12; main.scale.setScalar(1.05);
-  scene.add(main);
-
-  /* dybde-stenger bak (parallax + dybde) */
-  var back1 = makePole(4); back1.position.set(-3.2, 1.2, -6); back1.rotation.z = -0.2; back1.scale.setScalar(0.8); scene.add(back1);
-  var back2 = makePole(3.4); back2.position.set(5.4, -2.4, -9); back2.rotation.z = 0.26; back2.scale.setScalar(0.7); scene.add(back2);
-
-  /* gull-ring rundt hovedstangen */
-  var ring = new THREE.Mesh(new THREE.TorusGeometry(3.2, 0.05, 16, 150),
-    new THREE.MeshStandardMaterial({ color: 0xc9a14a, roughness: 0.25, metalness: 1 }));
-  ring.position.copy(main.position); ring.rotation.x = Math.PI / 2.3; scene.add(ring);
-
-  /* svevende støv (navy, diskret på krem) */
-  var N = reduced ? 120 : 520, pos = new Float32Array(N * 3);
-  for (var i = 0; i < N; i++) {
-    pos[i * 3] = (Math.random() - 0.5) * 26;
-    pos[i * 3 + 1] = (Math.random() - 0.5) * 16;
-    pos[i * 3 + 2] = (Math.random() - 0.5) * 14 - 2;
+  function station(x, z, faceRight) {
+    var wallX = faceRight ? 5.45 : -5.45;
+    var ry = faceRight ? -Math.PI / 2 : Math.PI / 2;
+    // speil
+    var frame = new THREE.Mesh(new THREE.BoxGeometry(0.12, 2.4, 1.5), matNavy);
+    frame.position.set(wallX, 1.2, z); frame.rotation.y = 0; scene.add(frame);
+    var mir = new THREE.Mesh(new THREE.PlaneGeometry(1.2, 2.1), matMirror);
+    mir.position.set(wallX + (faceRight ? -0.07 : 0.07), 1.2, z); mir.rotation.y = ry; scene.add(mir);
+    // barberstang ved speilet
+    var tex = stripeTex(); poleTextures.push(tex);
+    var pole = new THREE.Mesh(new THREE.CylinderGeometry(0.16, 0.16, 1.5, 20, 1, true),
+      new THREE.MeshStandardMaterial({ map: tex, roughness: 0.4 }));
+    pole.position.set(wallX + (faceRight ? -0.12 : 0.12), 1.2, z + 1.1); scene.add(pole);
+    // stol foran speilet
+    chair(x, z, faceRight);
   }
-  var pg = new THREE.BufferGeometry(); pg.setAttribute("position", new THREE.BufferAttribute(pos, 3));
-  var dust = new THREE.Points(pg, new THREE.PointsMaterial({ color: 0x20364e, size: 0.04, transparent: true, opacity: 0.35, depthWrite: false }));
-  scene.add(dust);
 
-  /* scroll (hero-relativ) + mus */
-  var raw = 0, spL = 0, mx = 0, my = 0, cmx = 0, cmy = 0;
-  function onScroll() { raw = Math.min(Math.max(scrollY / innerHeight, 0), 1); }
+  /* rad av stasjoner, vekslende side => kamera vever fra stol til stol */
+  var zs = [5, -2, -9, -16, -23, -30, -37];
+  for (var i = 0; i < zs.length; i++) station(i % 2 === 0 ? 2.7 : -2.7, zs[i], i % 2 === 0);
+
+  /* taklamper (emissive) */
+  for (var L = 0; L < 6; L++) {
+    var lamp = new THREE.Mesh(new THREE.BoxGeometry(2.4, 0.08, 0.5), matGlow);
+    lamp.position.set(0, 4.9, 4 - L * 8); scene.add(lamp);
+  }
+
+  /* ---------- lys ---------- */
+  scene.add(new THREE.AmbientLight(0xfff1d8, 0.7));
+  var key = new THREE.DirectionalLight(0xffffff, 0.6); key.position.set(3, 8, 6); scene.add(key);
+  var warmA = new THREE.PointLight(0xffd9a0, 0.9, 26); warmA.position.set(0, 4, 2); scene.add(warmA);
+  var warmB = new THREE.PointLight(0xffd0c0, 0.9, 26); warmB.position.set(0, 4, -16); scene.add(warmB);
+  var red = new THREE.PointLight(0xc0432f, 0.7, 22); red.position.set(-3, 2, -24); scene.add(red);
+
+  /* ---------- scroll + mus ---------- */
+  var jp = 0, jpL = 0, mx = 0, my = 0, cmx = 0, cmy = 0;
+  function journeyProg() {
+    if (!journey) return Math.min(scrollY / innerHeight, 1);
+    var total = journey.offsetHeight - innerHeight;
+    return total > 0 ? Math.min(Math.max(scrollY / total, 0), 1) : 0;
+  }
+  function onScroll() { jp = journeyProg(); }
   addEventListener("scroll", onScroll, { passive: true });
   addEventListener("mousemove", function (e) { mx = e.clientX / innerWidth - 0.5; my = e.clientY / innerHeight - 0.5; });
   onScroll();
 
   function resize() {
-    var b = box();
-    renderer.setSize(b.w, b.h, false);
-    camera.aspect = b.w / b.h; camera.updateProjectionMatrix();
-    var mobile = b.w < 720;
-    main.position.x = mobile ? 0.2 : 2.6;
-    main.scale.setScalar(mobile ? 0.82 : 1.05);
-    ring.position.x = main.position.x; ring.scale.setScalar(mobile ? 0.78 : 1);
+    camera.aspect = innerWidth / innerHeight; camera.updateProjectionMatrix();
+    renderer.setSize(innerWidth, innerHeight);
   }
-  addEventListener("resize", resize); resize();
+  addEventListener("resize", resize);
 
-  var clock = new THREE.Clock();
+  function lerp(a, b, t) { return a + (b - a) * t; }
+
+  var clock = new THREE.Clock(), last = 0;
   function frame() {
     requestAnimationFrame(frame);
-    if (document.hidden || scrollY > innerHeight * 1.15) return; // pauser forbi heroen
     var t = clock.getElapsedTime();
-    spL += (raw - spL) * 0.08;
+    jpL += (jp - jpL) * 0.07;
     cmx += (mx - cmx) * 0.05; cmy += (my - cmy) * 0.05;
 
-    /* spinnende stenger */
-    if (!reduced) {
-      main.userData.tex.offset.y -= 0.006 + spL * 0.02;
-      back1.userData.tex.offset.y -= 0.004;
-      back2.userData.tex.offset.y -= 0.003;
-    }
-    main.rotation.y = t * 0.3 + cmx * 0.4;
-    back1.rotation.y = t * 0.22; back2.rotation.y = -t * 0.18;
-    main.position.y = spL * 1.6;                 // stiger litt ved scroll
-    ring.position.y = main.position.y;
-    ring.rotation.z = t * 0.15; ring.scale.setScalar((main.position.x === 0.2 ? 0.78 : 1) * (1 + spL * 0.3));
+    // kamera flyr nedover midtgangen, vever mot stolene
+    var z = lerp(12, -42, jpL);
+    camera.position.x = Math.sin(jpL * Math.PI * 3.1) * 1.7 + cmx * 1.2;
+    camera.position.y = 0.6 + Math.sin(jpL * 10) * 0.08 - cmy * 0.8;
+    camera.position.z = z;
+    camera.lookAt(Math.sin(jpL * Math.PI * 3.1 + 0.6) * 1.4, 0.3, z - 7);
 
-    /* støv driver, kamera-parallax */
-    dust.rotation.y = t * 0.03; dust.position.y = Math.sin(t * 0.3) * 0.3 + spL * 1.2;
-    camera.position.x += (cmx * 1.4 - camera.position.x) * 0.05;
-    camera.position.y += (-cmy * 1.0 - camera.position.y) * 0.05;
-    camera.lookAt(main.position.x * 0.4, main.position.y * 0.5, 0);
+    if (!reduced) for (var i = 0; i < poleTextures.length; i++) poleTextures[i].offset.y -= 0.01;
+    red.position.x = Math.sin(t * 0.8) * 3;
 
-    /* animert farget lys for liv i metallet */
-    red.position.set(Math.sin(t * 0.7) * 6 + main.position.x, Math.cos(t * 0.5) * 4, 5);
-    blue.position.set(Math.cos(t * 0.6) * -6, Math.sin(t * 0.8) * 4, 4);
+    // toner ut når reisen er ferdig, så innholdet under står rent
+    var fade = 1 - Math.max(0, (jpL - 0.86) / 0.14);
+    canvas.style.opacity = fade;
 
+    // pause når vi er godt forbi reisen
+    if (jpL >= 0.999 && fade <= 0.01) { if (last !== -1) { renderer.render(scene, camera); last = -1; } return; }
+    last = 0;
     renderer.render(scene, camera);
   }
   frame();
