@@ -4,7 +4,7 @@ Moderne, «fancy» nettside for **Mo's Barbershop** på Linderud Senter i Oslo.
 Bygget som en rask, statisk side med ekte 3D-effekter (Three.js) — ingen byggesteg.
 
 🔗 **Adresse:** Linderud Senter (plan 2), Erich Mogensøns vei 38, 0594 Oslo
-📞 **Telefon:** 966 53 771 · 📸 Instagram: [@mos_barber_](https://www.instagram.com/mos_barber_/)
+📞 **Telefon:** 966 53 771 · 📸 Instagram: [@mosbarber_as](https://www.instagram.com/mosbarber_as)
 
 ## Funksjoner
 
@@ -37,7 +37,7 @@ python3 -m http.server 8000
 
 Galleribildene er midlertidige (Unsplash). Legg egne bilder fra salongen i
 `assets/` og bytt `src` i `index.html` (søk etter `images.unsplash.com`).
-Tips: hent de beste bildene fra Instagram [@mos_barber_](https://www.instagram.com/mos_barber_/).
+Tips: hent de beste bildene fra Instagram [@mosbarber_as](https://www.instagram.com/mosbarber_as).
 
 ## Justér før lansering
 
