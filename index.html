@@ -91,10 +91,24 @@
       </div>
     </div>
 
+    <!-- ============ REEL (pinnet ord-reise) ============ -->
+    <section class="reel">
+      <div class="reel__sticky">
+        <span class="reel__kicker">Klippekunst, steg for steg</span>
+        <div class="reel__words">
+          <h2 data-word>EN FADE.</h2>
+          <h2 data-word>EN LINJE.</h2>
+          <h2 data-word>ET SKJEGG.</h2>
+          <h2 data-word>EN FØLELSE.</h2>
+        </div>
+        <span class="reel__hint">↓ fortsett</span>
+      </div>
+    </section>
+
     <!-- ============ INTRO SPREAD ============ -->
     <section class="spread">
-      <figure class="spread__media r" data-tilt data-cursor>
-        <img src="assets/storefront-wide.jpg" alt="Mo's Barbershop sett fra inngangen på Linderud Senter" loading="lazy" />
+      <figure class="spread__media par-frame r" data-tilt data-cursor>
+        <img src="assets/storefront-wide.jpg" data-par="0.16" alt="Mo's Barbershop sett fra inngangen på Linderud Senter" loading="lazy" />
       </figure>
       <div class="spread__copy">
         <div class="num r">01</div>
@@ -127,22 +141,26 @@
       </ul>
     </section>
 
-    <!-- ============ GALLERI ============ -->
-    <section class="gal" id="galleri">
-      <div class="gal__head">
-        <div>
-          <div class="num r">03</div>
-          <h2 class="r" style="--d:.06s">Fra salongen</h2>
+    <!-- ============ GALLERI (horisontal reise) ============ -->
+    <section class="hscroll" id="galleri">
+      <div class="hscroll__sticky">
+        <div class="hscroll__track" data-htrack>
+          <div class="hslide hslide--intro">
+            <div class="num">03</div>
+            <h2>Fra<br>salongen</h2>
+            <p>Bla deg gjennom ekte øyeblikk fra Linderud →</p>
+          </div>
+          <figure class="hcard hcard--tall"><img src="assets/interior.jpg" alt="Salongen innvendig" loading="lazy" /><figcaption><b>Salongen</b>Murvegg &amp; varmt lys</figcaption></figure>
+          <figure class="hcard"><img src="assets/working.jpg" alt="Barbererne i full sving" loading="lazy" /><figcaption><b>I sving</b>En vanlig dag</figcaption></figure>
+          <figure class="hcard hcard--tall"><img src="assets/styling.jpg" alt="Styling av klipp" loading="lazy" /><figcaption><b>Finishen</b>Styling til slutt</figcaption></figure>
+          <figure class="hcard"><img src="assets/fade-back.jpg" alt="Fade sett bakfra" loading="lazy" /><figcaption><b>Faden</b>Ren overgang</figcaption></figure>
+          <figure class="hcard hcard--tall"><img src="assets/result-fade-beard.jpg" alt="Klipp med skjegg" loading="lazy" /><figcaption><b>Resultatet</b>Klipp &amp; skjegg</figcaption></figure>
+          <figure class="hcard"><img src="assets/pole.jpg" alt="Barberstangen i vinduet" loading="lazy" /><figcaption><b>Klassikeren</b>Stangen i vinduet</figcaption></figure>
+          <div class="hslide hslide--out">
+            <p>Mer på Instagram</p>
+            <a href="https://www.instagram.com/mosbarber_as" target="_blank" rel="noopener" data-cursor>@mosbarber_as →</a>
+          </div>
         </div>
-        <p class="r" style="--d:.12s">Ekte bilder fra Linderud. Følg <a href="https://www.instagram.com/mosbarber_as" target="_blank" rel="noopener" data-cursor>@mosbarber_as</a>.</p>
-      </div>
-      <div class="grid">
-        <figure class="cell cell--wide r" data-cursor><img src="assets/interior.jpg" alt="Salongen innvendig" loading="lazy" /><figcaption><b>Salongen</b>To stoler, murvegg, varmt lys</figcaption></figure>
-        <figure class="cell cell--tall r" style="--d:.06s" data-cursor><img src="assets/working.jpg" alt="Barbererne i full sving" loading="lazy" /><figcaption><b>I sving</b>En vanlig dag på jobb</figcaption></figure>
-        <figure class="cell cell--tall r" style="--d:.12s" data-cursor><img src="assets/styling.jpg" alt="Styling av klipp" loading="lazy" /><figcaption><b>Finishen</b>Styling til slutt</figcaption></figure>
-        <figure class="cell r" style="--d:.18s" data-cursor><img src="assets/fade-back.jpg" alt="Fade sett bakfra" loading="lazy" /><figcaption><b>Faden</b>Ren overgang</figcaption></figure>
-        <figure class="cell r" style="--d:.24s" data-cursor><img src="assets/result-fade-beard.jpg" alt="Klipp med skjegg" loading="lazy" /><figcaption><b>Resultatet</b>Klipp &amp; skjegg</figcaption></figure>
-        <figure class="cell r" style="--d:.3s" data-cursor><img src="assets/pole.jpg" alt="Barberstangen i vinduet" loading="lazy" /><figcaption><b>Klassikeren</b>Stangen i vinduet</figcaption></figure>
       </div>
     </section>
 
@@ -159,8 +177,8 @@
         </div>
         <a href="#kontakt" class="btn btn--navy r" style="--d:.36s" data-cursor data-magnetic>Bestill time</a>
       </div>
-      <figure class="feat__media r" data-tilt data-cursor>
-        <img src="assets/styling.jpg" alt="Barber i arbeid hos Mo's Barbershop" loading="lazy" />
+      <figure class="feat__media par-frame r" data-tilt data-cursor>
+        <img src="assets/styling.jpg" data-par="0.18" alt="Barber i arbeid hos Mo's Barbershop" loading="lazy" />
         <span class="feat__seal">4,9 ★</span>
       </figure>
     </section>

@@ -95,4 +95,56 @@
       el.addEventListener("mouseleave", function () { el.style.transform = ""; });
     });
   }
+
+  /* ---------- scroll-reise: parallax + pinnede scener ---------- */
+  (function scrollJourney() {
+    function clamp(v, a, b) { return Math.max(a, Math.min(b, v)); }
+    var parEls = [].slice.call(document.querySelectorAll("[data-par]"));
+    var reel = document.querySelector(".reel");
+    var reelWords = reel ? [].slice.call(reel.querySelectorAll("[data-word]")) : [];
+    var hs = document.querySelector(".hscroll");
+    var track = document.querySelector("[data-htrack]");
+
+    function loop() {
+      var vh = innerHeight;
+
+      // parallax på bilder i ramme
+      for (var i = 0; i < parEls.length; i++) {
+        var el = parEls[i], r = el.getBoundingClientRect();
+        if (r.bottom < -240 || r.top > vh + 240) continue;
+        var prog = ((r.top + r.height / 2) - vh / 2) / vh;     // -1..1 rundt midten
+        var sp = parseFloat(el.getAttribute("data-par")) || 0.12;
+        el.style.transform = "translate3d(0," + (prog * sp * -150) + "px,0) scale(1.18)";
+      }
+
+      // ord-reel
+      if (reel && reelWords.length) {
+        var rr = reel.getBoundingClientRect();
+        var total = reel.offsetHeight - vh;
+        var p = clamp(-rr.top / total, 0, 1);
+        var n = reelWords.length;
+        for (var w = 0; w < n; w++) {
+          var center = (w + 0.5) / n;
+          var on = clamp(1 - Math.abs(p - center) * n * 1.25, 0, 1);
+          var word = reelWords[w];
+          word.style.opacity = on;
+          word.style.transform = "translateY(" + ((p - center) * -70) + "px) scale(" + (0.72 + on * 0.28) + ")";
+        }
+      }
+
+      // horisontal galleri-reise
+      if (hs && track) {
+        var hr = hs.getBoundingClientRect();
+        var ht = hs.offsetHeight - vh;
+        if (hr.bottom > 0 && hr.top < vh) {
+          var hp = clamp(-hr.top / ht, 0, 1);
+          var dist = track.scrollWidth - innerWidth;
+          track.style.transform = "translate3d(" + (-hp * dist) + "px,0,0)";
+        }
+      }
+
+      requestAnimationFrame(loop);
+    }
+    requestAnimationFrame(loop);
+  })();
 })();

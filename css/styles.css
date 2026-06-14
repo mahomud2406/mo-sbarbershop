@@ -106,6 +106,40 @@ section h2, .menu__head h2, .gal__head h2 { font-family: var(--display); font-we
 .marq__row b { color: var(--red); font-size: 1.1rem; }
 @keyframes slide { to { transform: translateX(-50%); } }
 
+/* ---------- REEL (pinnet ord-reise) ---------- */
+.reel { position: relative; height: 360vh; background: var(--paper); }
+.reel__sticky { position: sticky; top: 0; height: 100vh; display: grid; place-items: center; text-align: center; overflow: hidden; }
+.reel__sticky::before { content: ""; position: absolute; inset: -20%; z-index: 0; opacity: .06;
+  background: repeating-linear-gradient(135deg, var(--red) 0 26px, transparent 26px 52px, var(--navy) 52px 78px, transparent 78px 104px); }
+.reel__kicker { position: absolute; top: 16vh; left: 0; right: 0; z-index: 2; font-size: .8rem; letter-spacing: .3em; text-transform: uppercase; color: var(--red); font-weight: 600; }
+.reel__hint { position: absolute; bottom: 12vh; left: 0; right: 0; z-index: 2; font-size: .72rem; letter-spacing: .25em; text-transform: uppercase; color: var(--muted); }
+.reel__words { position: relative; z-index: 2; width: 100%; height: 1.05em; }
+.reel__words h2 { position: absolute; inset: 0; margin: auto; height: 1.05em; display: grid; place-items: center; font-family: var(--display); font-weight: 400; font-size: clamp(3.2rem, 14vw, 12rem); line-height: 1; letter-spacing: .01em; color: var(--navy); opacity: 0; will-change: transform, opacity; }
+.reel__words h2:last-child { color: var(--red); }
+
+/* ---------- HORISONTAL REISE (galleri) ---------- */
+.hscroll { position: relative; height: 420vh; background: var(--paper); }
+.hscroll__sticky { position: sticky; top: 0; height: 100vh; overflow: hidden; display: flex; align-items: center; }
+.hscroll__track { display: flex; align-items: center; gap: clamp(16px, 2.4vw, 40px); padding: 0 6vw; will-change: transform; }
+.hslide { flex: 0 0 auto; }
+.hslide--intro { width: min(78vw, 480px); }
+.hslide--intro .num { font-family: var(--display); font-size: 1.6rem; color: var(--red); }
+.hslide--intro h2 { font-family: var(--display); font-weight: 400; font-size: clamp(3rem, 9vw, 7rem); line-height: .94; margin: 6px 0 16px; }
+.hslide--intro p { color: var(--muted); font-size: 1.05rem; }
+.hslide--out { width: min(70vw, 380px); text-align: center; }
+.hslide--out p { color: var(--muted); }
+.hslide--out a { display: inline-block; margin-top: 8px; font-family: var(--display); font-size: clamp(1.6rem, 4vw, 2.6rem); color: var(--red); }
+.hcard { position: relative; width: clamp(240px, 30vw, 400px); height: 58vh; border-radius: var(--r); overflow: hidden; background: var(--navy); }
+.hcard--tall { height: 72vh; }
+.hcard img { width: 100%; height: 100%; object-fit: cover; }
+.hcard figcaption { position: absolute; left: 16px; right: 16px; bottom: 14px; color: var(--paper); font-size: .82rem; text-shadow: 0 2px 14px rgba(0,0,0,.6); }
+.hcard figcaption b { display: block; font-family: var(--display); font-weight: 400; font-size: 1.4rem; letter-spacing: .03em; }
+.hcard::after { content: ""; position: absolute; inset: 0; background: linear-gradient(transparent 55%, rgba(22,39,58,.72)); }
+
+/* ---------- parallax-rammer ---------- */
+.par-frame { overflow: hidden; }
+.par-frame img { will-change: transform; }
+
 /* ---------- generic section spacing ---------- */
 .spread, .menu, .gal, .feat, .team, .revs, .visit { padding: clamp(70px, 10vw, 130px) clamp(18px, 5vw, 60px); max-width: 1280px; margin: 0 auto; }
 
