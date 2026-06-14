@@ -3,22 +3,23 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Mo's Barbershop — Klippekunst på Linderud, Oslo</title>
-  <meta name="description" content="Mo's Barbershop på Linderud Senter. Klippekunst, presis fade og skjegg formet med håndverk. 4,9★ — bestill time i Oslo." />
-  <meta name="theme-color" content="#0a0a0b" />
-  <meta property="og:title" content="Mo's Barbershop — Klippekunst på Linderud" />
+  <title>Mo's Barbershop — Linderud Senter, Oslo</title>
+  <meta name="description" content="Mo's Barbershop på Linderud Senter i Oslo. Presis fade, skarpe klipp og skjegg formet med håndverk. 4,9★ — bestill time i dag." />
+  <meta name="theme-color" content="#0b0b0d" />
+  <meta property="og:title" content="Mo's Barbershop — Linderud Senter, Oslo" />
   <meta property="og:description" content="Presis fade, ren stil, ekte håndverk. Linderud Senter, Oslo." />
+  <meta property="og:image" content="assets/interior.jpg" />
   <meta property="og:type" content="business.business" />
 
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-  <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Fraunces:ital,opsz,wght@0,9..144,300..600;1,9..144,300..600&family=Space+Grotesk:wght@300;400;500;600;700&display=swap" rel="stylesheet" />
+  <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Space+Grotesk:wght@300;400;500;600;700&display=swap" rel="stylesheet" />
   <link rel="stylesheet" href="css/styles.css" />
 
   <script type="application/ld+json">
   {
     "@context": "https://schema.org", "@type": "BarberShop",
-    "name": "Mo's Barbershop",
+    "name": "Mo's Barbershop", "image": "assets/interior.jpg",
     "telephone": "+47 966 53 771", "priceRange": "kr",
     "address": { "@type": "PostalAddress", "streetAddress": "Erich Mogensøns vei 38, Linderud Senter (plan 2)", "postalCode": "0594", "addressLocality": "Oslo", "addressCountry": "NO" },
     "openingHours": ["Mo-Fr 10:00-20:00", "Sa 10:00-18:00"],
@@ -27,237 +28,201 @@
   </script>
 </head>
 <body>
-  <!-- SVG-korn for filmaktig tekstur -->
-  <svg class="grain" aria-hidden="true"><filter id="n"><feTurbulence type="fractalNoise" baseFrequency="0.8" numOctaves="2" stitchTiles="stitch"/></filter><rect width="100%" height="100%" filter="url(#n)"/></svg>
-
-  <canvas id="gl"></canvas>
-
   <div class="cursor" id="cursor"></div>
   <div class="cursor-dot" id="cursorDot"></div>
-
-  <!-- flytende forhåndsvisning for tjenestelisten -->
-  <div class="peek" id="peek"><img alt="" id="peekImg" /></div>
 
   <div class="loader" id="loader">
     <div class="loader__bar"><span></span></div>
     <div class="loader__txt">MO&rsquo;S BARBERSHOP</div>
   </div>
-
   <div class="progress" id="progress"></div>
 
+  <!-- ================= NAV ================= -->
   <header class="nav" id="nav">
-    <a href="#top" class="brand" data-cursor>
-      <span class="brand__m">M</span><span class="brand__t">Mo&rsquo;s</span>
-    </a>
+    <a href="#top" class="brand" data-cursor>MO&rsquo;S <span>BARBERSHOP</span></a>
     <nav class="nav__links">
-      <a href="#tjenester" data-cursor><span>01</span> Tjenester</a>
-      <a href="#galleri" data-cursor><span>02</span> Galleri</a>
-      <a href="#filosofi" data-cursor><span>03</span> Håndverk</a>
-      <a href="#besok" data-cursor><span>04</span> Besøk oss</a>
+      <a href="#tjenester" data-cursor>Tjenester</a>
+      <a href="#galleri" data-cursor>Galleri</a>
+      <a href="#salong" data-cursor>Salongen</a>
+      <a href="#besok" data-cursor>Besøk oss</a>
     </nav>
-    <a href="#kontakt" class="btn-line nav__cta" data-cursor data-magnetic>Bestill time</a>
+    <a href="#kontakt" class="btn btn--ghost nav__cta" data-cursor data-magnetic>Bestill time</a>
     <button class="burger" id="burger" aria-label="Meny"><span></span><span></span></button>
   </header>
-
   <div class="mobile" id="mobile">
-    <a href="#tjenester">Tjenester</a>
-    <a href="#galleri">Galleri</a>
-    <a href="#filosofi">Håndverk</a>
-    <a href="#besok">Besøk oss</a>
-    <a href="#kontakt" class="btn-line">Bestill time</a>
+    <a href="#tjenester">Tjenester</a><a href="#galleri">Galleri</a>
+    <a href="#salong">Salongen</a><a href="#besok">Besøk oss</a>
+    <a href="#kontakt" class="btn btn--gold">Bestill time</a>
   </div>
 
   <main id="top">
     <!-- ================= HERO ================= -->
     <section class="hero">
-      <div class="hero__eyebrow reveal">Linderud Senter · Oslo · 2&nbsp;etg.</div>
-      <h1 class="hero__title">
-        <span class="line"><span class="word">MO&rsquo;S</span></span>
-        <span class="line line--serif"><em class="word">the art</em> <span class="word">of the</span></span>
-        <span class="line"><span class="word gold">CUT</span></span>
-      </h1>
-      <div class="hero__row reveal">
-        <p class="hero__lead">Presis fade. Ren stil. Skjegg formet med stødig hånd — klippekunst midt på Linderud.</p>
-        <a href="#kontakt" class="btn-fill" data-cursor data-magnetic>Bestill din time</a>
-      </div>
-      <div class="hero__meta">
-        <div class="reveal"><b data-count="4.9" data-decimals="1">0</b><i>snittvurdering</i></div>
-        <div class="reveal" style="--d:.1s"><b data-count="3800" data-suffix="+">0</b><i>på Instagram</i></div>
-        <div class="reveal" style="--d:.2s"><b>Drop-in</b><i>&amp; timebestilling</i></div>
-      </div>
-      <a href="#manifest" class="scrollcue" data-cursor><span></span>scroll for å se</a>
-    </section>
-
-    <!-- ================= MANIFEST ================= -->
-    <section class="stage" id="manifest">
-      <p class="manifest">
-        <span class="mline">Et klipp er ikke bare et klipp.</span>
-        <span class="mline">Det er <em>linjer</em>, balanse og</span>
-        <span class="mline">en følelse av å gå ut</span>
-        <span class="mline gold">som en skarpere utgave av deg selv.</span>
-      </p>
-    </section>
-
-    <!-- ================= SHOWCASE (ekte interiør) ================= -->
-    <section class="showcase" id="salong">
-      <div class="showcase__media">
-        <img src="assets/interior.jpg" alt="Inne i Mo's Barbershop — stoler, speil og murvegg" loading="lazy" id="showImg" />
-      </div>
-      <div class="showcase__label">
-        <span class="reveal">Ekte stemning</span>
-        <h2 class="reveal" style="--d:.08s">Salongen på<br><em>Linderud</em></h2>
-        <p class="reveal" style="--d:.16s">To stoler, varmt lys og full fokus på deg som sitter i den. Slik ser det ut når du stikker innom.</p>
-      </div>
-    </section>
-
-    <!-- ================= TJENESTER ================= -->
-    <section class="panel services" id="tjenester">
-      <header class="shead">
-        <span class="shead__no">01</span>
-        <h2 class="shead__title">Tjenester</h2>
-        <p class="shead__sub">Veiledende priser — endelig pris og booking bekreftes i salongen eller via Fresha.</p>
-      </header>
-
-      <ul class="svc-list">
-        <li class="svc reveal" data-img="assets/fade-back.jpg" data-cursor>
-          <span class="svc__no">01</span><span class="svc__name">Herreklipp</span>
-          <span class="svc__desc">Klassisk eller moderne, tilpasset deg. Vask &amp; styling.</span>
-          <span class="svc__price">fra 350,–</span>
-        </li>
-        <li class="svc reveal" data-img="assets/fade-back.jpg" data-cursor>
-          <span class="svc__no">02</span><span class="svc__name">Skin Fade</span>
-          <span class="svc__desc">Overgang helt ned til huden. Vårt signaturklipp.</span>
-          <span class="svc__price">fra 400,–</span>
-        </li>
-        <li class="svc reveal" data-img="assets/result-fade-beard.jpg" data-cursor>
-          <span class="svc__no">03</span><span class="svc__name">Skjeggtrim</span>
-          <span class="svc__desc">Forming, kontur og trim. Olje &amp; varmt håndkle.</span>
-          <span class="svc__price">fra 250,–</span>
-        </li>
-        <li class="svc reveal" data-img="assets/result-fade-beard.jpg" data-cursor>
-          <span class="svc__no">04</span><span class="svc__name">Klipp + Skjegg</span>
-          <span class="svc__desc">Hele pakken, satt sammen til ett rent uttrykk.</span>
-          <span class="svc__price">fra 550,–</span>
-        </li>
-        <li class="svc reveal" data-img="assets/interior.jpg" data-cursor>
-          <span class="svc__no">05</span><span class="svc__name">Hot Towel Shave</span>
-          <span class="svc__desc">Tradisjonell barbering med kniv, skum &amp; damp.</span>
-          <span class="svc__price">fra 300,–</span>
-        </li>
-        <li class="svc reveal" data-img="assets/storefront.jpg" data-cursor>
-          <span class="svc__no">06</span><span class="svc__name">Barneklipp</span>
-          <span class="svc__desc">Rolig og tålmodig for de yngste.</span>
-          <span class="svc__price">fra 250,–</span>
-        </li>
-      </ul>
-    </section>
-
-    <!-- ================= GALLERI (horisontal) ================= -->
-    <section class="gallery" id="galleri">
-      <div class="gallery__sticky">
-        <div class="gallery__track" id="galTrack">
-          <div class="gal-intro">
-            <span class="shead__no">02</span>
-            <h2 class="shead__title">Galleri<span class="gold">.</span></h2>
-            <p>Scroll &rarr; bla gjennom salongen.<br>Følg <a href="https://www.instagram.com/mos_barber_/" target="_blank" rel="noopener" data-cursor>@mos_barber_</a></p>
-          </div>
-          <figure class="gal gal--tall" data-cursor><img src="assets/storefront.jpg" alt="Inngangen til Mo's Barbershop på Linderud Senter" loading="lazy"><figcaption>01 — Inngangen</figcaption></figure>
-          <figure class="gal gal--wide" data-cursor><img src="assets/interior.jpg" alt="Salongen innvendig med barberstoler og murvegg" loading="lazy"><figcaption>02 — Salongen</figcaption></figure>
-          <figure class="gal gal--tall" data-cursor><img src="assets/fade-back.jpg" alt="Ferdig fade sett bakfra" loading="lazy"><figcaption>03 — Faden</figcaption></figure>
-          <figure class="gal gal--tall" data-cursor><img src="assets/result-fade-beard.jpg" alt="Ferdig klipp med skjegg" loading="lazy"><figcaption>04 — Resultatet</figcaption></figure>
-          <div class="gal-out">
-            <p>Egne bilder?<br><span>Send dem, så bytter vi inn.</span></p>
-          </div>
+      <div class="hero__copy">
+        <div class="hero__badge">Linderud Senter · Oslo · 2. etasje</div>
+        <h1 class="hero__title">
+          <span class="r">SKARPE</span>
+          <span class="r" style="--d:.06s">KLIPP.</span>
+          <span class="r accent" style="--d:.12s">REN STIL.</span>
+        </h1>
+        <p class="hero__lead r" style="--d:.2s">Presis fade, klassisk fasong og skjegg formet med stødig hånd — klippekunst midt på Linderud.</p>
+        <div class="hero__cta r" style="--d:.28s">
+          <a href="#kontakt" class="btn btn--gold" data-cursor data-magnetic>Bestill din time</a>
+          <a href="#tjenester" class="btn btn--ghost" data-cursor data-magnetic>Se priser</a>
+        </div>
+        <div class="hero__stats r" style="--d:.36s">
+          <div><b data-count="4.9" data-decimals="1">0</b><i>★ snitt</i></div>
+          <div><b data-count="3800" data-suffix="+">0</b><i>på Instagram</i></div>
+          <div><b>6</b><i>dager i uken</i></div>
         </div>
       </div>
+      <div class="hero__stage" id="heroStage">
+        <canvas id="gl"></canvas>
+        <span class="hero__hint">Beveg musen &amp; scroll</span>
+      </div>
+      <a href="#tjenester" class="scrollcue" data-cursor aria-label="Scroll"><span></span></a>
     </section>
 
-    <!-- ================= FILOSOFI ================= -->
-    <section class="stage philo" id="filosofi">
-      <p class="philo__no reveal">03 — Håndverk</p>
-      <h2 class="philo__title">
-        <span class="reveal">Det er detaljene</span>
-        <span class="reveal" style="--d:.1s">som gjør <em>forskjellen.</em></span>
-      </h2>
-      <div class="philo__grid">
-        <div class="philo__item reveal"><span>Presisjon</span><p>Skarpe overganger, rene linjer. Vi tar oss tid til finishen — alltid.</p></div>
-        <div class="philo__item reveal" style="--d:.1s"><span>Erfaring</span><p>Trygge hender som mestrer både klassisk og moderne stil.</p></div>
-        <div class="philo__item reveal" style="--d:.2s"><span>Stemning</span><p>Sentralt på Linderud. Stikk innom, slå av en prat, gå ut skjerpet.</p></div>
+    <!-- ================= TICKER ================= -->
+    <div class="ticker" aria-hidden="true">
+      <div class="ticker__row">
+        <span>Herreklipp</span><i>✦</i><span>Skin Fade</span><i>✦</i><span>Skjeggtrim</span><i>✦</i><span>Hot Towel Shave</span><i>✦</i><span>Barneklipp</span><i>✦</i><span>Linjering</span><i>✦</i>
+        <span>Herreklipp</span><i>✦</i><span>Skin Fade</span><i>✦</i><span>Skjeggtrim</span><i>✦</i><span>Hot Towel Shave</span><i>✦</i><span>Barneklipp</span><i>✦</i><span>Linjering</span><i>✦</i>
+      </div>
+    </div>
+
+    <!-- ================= TJENESTER ================= -->
+    <section class="sec services" id="tjenester">
+      <div class="sec__head">
+        <div class="kicker">Tjenester &amp; priser</div>
+        <h2 class="sec__title">Velg din behandling</h2>
+        <p class="sec__lead">Veiledende priser. Endelig pris og booking bekreftes i salongen eller via Fresha.</p>
+      </div>
+      <div class="svc-grid">
+        <article class="svc r" data-cursor><span class="svc__no">01</span><h3>Herreklipp</h3><p>Klassisk eller moderne, tilpasset hårtype og ansiktsform. Vask &amp; styling inkludert.</p><div class="svc__price">fra 350,–</div></article>
+        <article class="svc r" style="--d:.05s" data-cursor><span class="svc__no">02</span><h3>Skin Fade</h3><p>Overgang helt ned til huden. Skarpe linjer og ren finish — vårt signaturklipp.</p><div class="svc__price">fra 400,–</div></article>
+        <article class="svc r" style="--d:.1s" data-cursor><span class="svc__no">03</span><h3>Skjeggtrim</h3><p>Forming, konturering og trim med saks og maskin. Olje &amp; varmt håndkle.</p><div class="svc__price">fra 250,–</div></article>
+        <article class="svc r" style="--d:.15s" data-cursor><span class="svc__no">04</span><h3>Klipp + Skjegg</h3><p>Hele pakken. Klipp, fade og skjegg satt sammen til ett rent uttrykk.</p><div class="svc__price">fra 550,–</div></article>
+        <article class="svc r" style="--d:.2s" data-cursor><span class="svc__no">05</span><h3>Hot Towel Shave</h3><p>Tradisjonell barbering med varmt håndkle, skum og barberkniv.</p><div class="svc__price">fra 300,–</div></article>
+        <article class="svc r" style="--d:.25s" data-cursor><span class="svc__no">06</span><h3>Barneklipp</h3><p>Rolig og tålmodig for de yngste. Første barbertur skal være en god opplevelse.</p><div class="svc__price">fra 250,–</div></article>
+      </div>
+    </section>
+
+    <!-- ================= GALLERI (statisk bento) ================= -->
+    <section class="sec gallery" id="galleri">
+      <div class="sec__head">
+        <div class="kicker">Galleri</div>
+        <h2 class="sec__title">Ekte bilder fra salongen</h2>
+        <p class="sec__lead">Følg <a href="https://www.instagram.com/mos_barber_/" target="_blank" rel="noopener" data-cursor>@mos_barber_</a> for fersk inspirasjon.</p>
+      </div>
+      <div class="bento">
+        <figure class="bento__item bento__item--tall r" data-cursor>
+          <img src="assets/storefront.jpg" alt="Inngangen til Mo's Barbershop på Linderud Senter" loading="lazy" />
+          <figcaption><span>Inngangen</span>Linderud Senter</figcaption>
+        </figure>
+        <figure class="bento__item bento__item--wide r" style="--d:.06s" data-cursor>
+          <img src="assets/interior.jpg" alt="Inne i salongen med barberstoler og murvegg" loading="lazy" />
+          <figcaption><span>Salongen</span>To stoler, varmt lys</figcaption>
+        </figure>
+        <figure class="bento__item r" style="--d:.12s" data-cursor>
+          <img src="assets/fade-back.jpg" alt="Ferdig fade sett bakfra" loading="lazy" />
+          <figcaption><span>Faden</span>Ren overgang</figcaption>
+        </figure>
+        <figure class="bento__item r" style="--d:.18s" data-cursor>
+          <img src="assets/result-fade-beard.jpg" alt="Ferdig klipp med skjegg" loading="lazy" />
+          <figcaption><span>Resultatet</span>Klipp &amp; skjegg</figcaption>
+        </figure>
+      </div>
+    </section>
+
+    <!-- ================= SALONGEN (split, statisk bilde) ================= -->
+    <section class="sec split" id="salong">
+      <figure class="split__media r" data-cursor>
+        <img src="assets/interior.jpg" alt="Mo's Barbershop interiør på Linderud" loading="lazy" />
+        <span class="split__tag">4,9 ★</span>
+      </figure>
+      <div class="split__copy">
+        <div class="kicker r">Håndverket</div>
+        <h2 class="split__title r" style="--d:.06s">Det er detaljene som gjør forskjellen</h2>
+        <ul class="feat">
+          <li class="r" style="--d:.12s"><b>01 — Presisjon</b><p>Skarpe overganger og rene linjer. Vi tar oss tid til finishen, hver gang.</p></li>
+          <li class="r" style="--d:.18s"><b>02 — Erfaring</b><p>Trygge hender som mestrer både klassisk og moderne stil.</p></li>
+          <li class="r" style="--d:.24s"><b>03 — Stemning</b><p>Sentralt på Linderud Senter. Stikk innom, slå av en prat, gå ut skjerpet.</p></li>
+        </ul>
+        <a href="#kontakt" class="btn btn--gold r" style="--d:.3s" data-cursor data-magnetic>Bestill time</a>
+      </div>
+    </section>
+
+    <!-- ================= ANMELDELSER ================= -->
+    <section class="sec reviews">
+      <div class="sec__head">
+        <div class="kicker">Anmeldelser</div>
+        <h2 class="sec__title">Kundene snakker</h2>
+        <div class="rate"><span>★★★★★</span><b>4,9 / 5</b><i>basert på vurderinger på nett</i></div>
+      </div>
+      <div class="rev-grid">
+        <blockquote class="rev r" data-cursor><p>«Beste fade jeg har fått i Oslo. Skarpe linjer, og de tar seg virkelig tid.»</p><footer>Fornøyd kunde</footer></blockquote>
+        <blockquote class="rev r" style="--d:.08s" data-cursor><p>«Profesjonelt, ryddig og god stemning. Skjegget mitt har aldri sett bedre ut.»</p><footer>Stamkunde på Linderud</footer></blockquote>
+        <blockquote class="rev r" style="--d:.16s" data-cursor><p>«Tok med sønnen min til barneklipp — utrolig tålmodige og hyggelige. Anbefales!»</p><footer>Lokal far</footer></blockquote>
       </div>
     </section>
 
     <!-- ================= BESØK OSS ================= -->
-    <section class="panel visit" id="besok">
-      <header class="shead">
-        <span class="shead__no">04</span>
-        <h2 class="shead__title">Besøk oss</h2>
-        <p class="shead__sub">Linderud Senter, plan 2 · Erich Mogensøns vei 38, 0594 Oslo</p>
-      </header>
-
+    <section class="sec visit" id="besok">
+      <div class="sec__head">
+        <div class="kicker">Besøk oss</div>
+        <h2 class="sec__title">Finn veien hit</h2>
+        <p class="sec__lead">Linderud Senter, plan 2 · Erich Mogensøns vei 38, 0594 Oslo</p>
+      </div>
       <div class="visit__grid">
-        <div class="card reveal" data-cursor>
-          <h3>Åpningstider</h3>
-          <ul class="hours">
-            <li><span>Man – Fre</span><b>10 – 20</b></li>
-            <li><span>Lørdag</span><b>10 – 18</b></li>
-            <li><span>Søndag</span><b>Stengt</b></li>
-          </ul>
-          <small>Følger i hovedsak senterets tider — ring gjerne for å bekrefte.</small>
+        <div class="info">
+          <div class="card r" data-cursor>
+            <h3>Åpningstider</h3>
+            <ul class="hours">
+              <li><span>Man – Fre</span><b>10 – 20</b></li>
+              <li><span>Lørdag</span><b>10 – 18</b></li>
+              <li><span>Søndag</span><b>Stengt</b></li>
+            </ul>
+            <small>Følger i hovedsak senterets tider — ring gjerne for å bekrefte.</small>
+          </div>
+          <div class="card card--gold r" style="--d:.08s" data-cursor>
+            <h3>Kontakt</h3>
+            <a class="line" href="tel:+4796653771" data-cursor>966&nbsp;53&nbsp;771</a>
+            <a class="line" href="https://www.instagram.com/mos_barber_/" target="_blank" rel="noopener" data-cursor>@mos_barber_</a>
+            <a class="line" href="https://www.fresha.com/a/mos-barber-oslo-erich-mogensons-vei-38-mel16rdn" target="_blank" rel="noopener" data-cursor>Book på Fresha →</a>
+          </div>
         </div>
-
-        <div class="card card--gold reveal" style="--d:.08s" data-cursor>
-          <h3>Kontakt</h3>
-          <a class="bigline" href="tel:+4796653771" data-cursor>966&nbsp;53&nbsp;771</a>
-          <a class="bigline" href="https://www.instagram.com/mos_barber_/" target="_blank" rel="noopener" data-cursor>@mos_barber_</a>
-          <a class="bigline" href="https://www.fresha.com/a/mos-barber-oslo-erich-mogensons-vei-38-mel16rdn" target="_blank" rel="noopener" data-cursor>Book på Fresha &rarr;</a>
-        </div>
-
-        <div class="card card--map reveal" style="--d:.16s">
+        <div class="map r" style="--d:.12s">
           <iframe title="Kart til Mo's Barbershop" loading="lazy" referrerpolicy="no-referrer-when-downgrade"
             src="https://www.google.com/maps?q=Linderud%20Senter%20Erich%20Mogens%C3%B8ns%20vei%2038%20Oslo&output=embed"></iframe>
         </div>
       </div>
-
-      <!-- anmeldelser som marquee -->
-      <div class="quotes" aria-hidden="false">
-        <div class="quotes__row">
-          <span>★★★★★ «Beste fade i Oslo.»</span><span class="dot">✦</span>
-          <span>«Skarpe linjer, de tar seg tid.»</span><span class="dot">✦</span>
-          <span>«Profesjonelt og ryddig.»</span><span class="dot">✦</span>
-          <span>«Skjegget har aldri sett bedre ut.»</span><span class="dot">✦</span>
-          <span>★★★★★ «Topp barneklipp.»</span><span class="dot">✦</span>
-          <span>«Beste fade i Oslo.»</span><span class="dot">✦</span>
-          <span>«Skarpe linjer, de tar seg tid.»</span><span class="dot">✦</span>
-          <span>«Profesjonelt og ryddig.»</span><span class="dot">✦</span>
-        </div>
-      </div>
     </section>
 
-    <!-- ================= KONTAKT CTA ================= -->
+    <!-- ================= CTA ================= -->
     <section class="cta" id="kontakt">
-      <p class="cta__eyebrow reveal">Klar når du er</p>
-      <a href="tel:+4796653771" class="cta__title" data-cursor data-magnetic>
-        <span class="reveal">Book ditt</span>
-        <span class="reveal gold" style="--d:.08s">neste klipp</span>
-      </a>
-      <div class="cta__actions reveal" style="--d:.16s">
-        <a href="tel:+4796653771" class="btn-fill" data-cursor data-magnetic>Ring 966 53 771</a>
-        <a href="https://www.fresha.com/a/mos-barber-oslo-erich-mogensons-vei-38-mel16rdn" target="_blank" rel="noopener" class="btn-line" data-cursor data-magnetic>Book online</a>
+      <div class="cta__inner">
+        <div class="kicker r">Klar når du er</div>
+        <h2 class="cta__title r" style="--d:.06s">Book ditt neste klipp</h2>
+        <div class="cta__actions r" style="--d:.12s">
+          <a href="tel:+4796653771" class="btn btn--gold btn--lg" data-cursor data-magnetic>Ring 966 53 771</a>
+          <a href="https://www.fresha.com/a/mos-barber-oslo-erich-mogensons-vei-38-mel16rdn" target="_blank" rel="noopener" class="btn btn--ghost btn--lg" data-cursor data-magnetic>Book online</a>
+        </div>
       </div>
     </section>
   </main>
 
   <footer class="footer">
-    <div class="footer__big">MO&rsquo;S</div>
-    <div class="footer__cols">
-      <div><b>Mo&rsquo;s Barbershop</b><p>Linderud Senter, plan 2<br>Erich Mogensøns vei 38<br>0594 Oslo</p></div>
+    <div class="footer__grid">
+      <div class="footer__brand">MO&rsquo;S <span>BARBERSHOP</span></div>
+      <div><b>Adresse</b><p>Linderud Senter, plan 2<br>Erich Mogensøns vei 38<br>0594 Oslo</p></div>
       <div><b>Kontakt</b><p><a href="tel:+4796653771">966 53 771</a><br><a href="https://www.instagram.com/mos_barber_/" target="_blank" rel="noopener">@mos_barber_</a></p></div>
       <div><b>Meny</b><p><a href="#tjenester">Tjenester</a><br><a href="#galleri">Galleri</a><br><a href="#besok">Besøk oss</a></p></div>
     </div>
     <div class="footer__base"><span>© <span id="year"></span> Mo&rsquo;s Barbershop</span><span>Klippekunst på Linderud</span></div>
   </footer>
 
-  <a href="#kontakt" class="float" id="float" data-cursor data-magnetic>Bestill</a>
+  <a href="#kontakt" class="float" id="float" data-cursor data-magnetic>Bestill time</a>
 
   <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
   <script src="js/scene.js"></script>
