@@ -89,11 +89,9 @@ section h2, .menu__head h2, .gal__head h2 { font-family: var(--display); font-we
 .hero__lead { max-width: 480px; color: var(--muted); font-size: 1.1rem; margin-bottom: 34px; }
 .hero__cta { display: flex; gap: 14px; flex-wrap: wrap; }
 .hero__stage { align-self: stretch; min-height: 60vh; }
-/* flytende, scroll-styrt barberstang */
-.pole-stage { position: fixed; top: 0; right: 0; z-index: 5; pointer-events: none;
-  width: clamp(190px, 26vw, 330px); height: clamp(230px, 36vh, 420px);
-  transform-origin: top right; will-change: transform; }
-#gl { position: absolute; inset: 0; width: 100%; height: 100%; }
+/* fullskjerm, gjennomsiktig lerret — selve stangen flyttes i 3D */
+.pole-stage { position: fixed; inset: 0; z-index: 5; pointer-events: none; }
+#gl { display: block; width: 100%; height: 100%; }
 .hero__foot { display: grid; grid-template-columns: repeat(4, 1fr); gap: 20px; border-top: 1.5px solid var(--line); padding: 26px 0; }
 .hero__foot b { display: block; font-family: var(--display); font-size: 2.4rem; line-height: 1; }
 .hero__foot i { font-style: normal; font-size: .82rem; color: var(--muted); }
