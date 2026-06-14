@@ -13,6 +13,7 @@
   --muted: #6d7585;        /* dempet blågrå */
   --line: rgba(32, 54, 78, 0.16);
   --r: 14px;
+  --rail: clamp(54px, 6.5vw, 88px);   /* reservert høyre «skinne» for barberstangen */
   --ease: cubic-bezier(0.22, 1, 0.36, 1);
   --display: "Bebas Neue", sans-serif;
   --sans: "Space Grotesk", system-ui, sans-serif;
@@ -20,7 +21,7 @@
 
 * { margin: 0; padding: 0; box-sizing: border-box; }
 html { scroll-behavior: smooth; -webkit-text-size-adjust: 100%; }
-body { background: var(--paper); color: var(--navy); font-family: var(--sans); line-height: 1.55; overflow-x: hidden; cursor: none; -webkit-font-smoothing: antialiased; }
+body { background: var(--paper); color: var(--navy); font-family: var(--sans); line-height: 1.55; overflow-x: hidden; cursor: none; -webkit-font-smoothing: antialiased; padding-right: var(--rail); }
 @media (hover: none) { body { cursor: auto; } }
 img { display: block; max-width: 100%; }
 a { color: inherit; text-decoration: none; }
@@ -56,7 +57,7 @@ a { color: inherit; text-decoration: none; }
 .btn--ghost:hover { background: var(--paper); color: var(--navy); border-color: var(--paper); }
 
 /* ---------- nav ---------- */
-.nav { position: fixed; top: 0; left: 0; right: 0; z-index: 800; display: flex; align-items: center; justify-content: space-between; padding: 16px clamp(18px, 5vw, 60px); transition: padding .4s, background .4s, box-shadow .4s; }
+.nav { position: fixed; top: 0; left: 0; right: var(--rail); z-index: 800; display: flex; align-items: center; justify-content: space-between; padding: 16px clamp(18px, 5vw, 60px); transition: padding .4s, background .4s, box-shadow .4s; }
 .nav.is-scrolled { background: rgba(244,234,212,.88); backdrop-filter: blur(14px); box-shadow: 0 1px 0 var(--line); padding-top: 10px; padding-bottom: 10px; }
 .brand img { height: 44px; width: auto; border-radius: 5px; transition: height .4s; }
 .nav.is-scrolled .brand img { height: 36px; }
@@ -89,8 +90,10 @@ section h2, .menu__head h2, .gal__head h2 { font-family: var(--display); font-we
 .hero__lead { max-width: 480px; color: var(--muted); font-size: 1.1rem; margin-bottom: 34px; }
 .hero__cta { display: flex; gap: 14px; flex-wrap: wrap; }
 .hero__stage { align-self: stretch; min-height: 60vh; }
-/* fullskjerm, gjennomsiktig lerret — alltid BAK alt innhold */
-.pole-stage { position: fixed; inset: 0; z-index: -1; pointer-events: none; }
+/* fullskjerm, gjennomsiktig lerret — stangen tegnes i den reserverte skinnen til høyre */
+.pole-stage { position: fixed; inset: 0; z-index: 4; pointer-events: none; }
+/* svak skille-linje for skinnen */
+.pole-stage::after { content: ""; position: absolute; top: 0; bottom: 0; right: var(--rail); width: 1px; background: var(--line); }
 #gl { display: block; width: 100%; height: 100%; }
 .hero__foot { display: grid; grid-template-columns: repeat(4, 1fr); gap: 20px; border-top: 1.5px solid var(--line); padding: 26px 0; margin-top: auto; }
 .hero__foot b { display: block; font-family: var(--display); font-size: 2.4rem; line-height: 1; }
@@ -223,8 +226,12 @@ section h2, .menu__head h2, .gal__head h2 { font-family: var(--display); font-we
 .footer__cols a:hover { color: var(--red); }
 .footer__base { display: flex; justify-content: space-between; flex-wrap: wrap; gap: 8px; max-width: 1280px; margin: 26px auto 0; color: rgba(244,234,212,.6); font-size: .8rem; }
 
+/* fullbredde mørke seksjoner strekker bakgrunnen forbi skinnen, men holder innhold klar av stangen */
+.marq, .cta, .footer { margin-right: calc(var(--rail) * -1); }
+.cta, .footer { padding-right: calc(clamp(18px, 5vw, 60px) + var(--rail)); }
+
 /* ---------- float ---------- */
-.float { position: fixed; bottom: 22px; right: 22px; z-index: 700; background: var(--red); color: #fff; padding: 14px 26px; border-radius: 100px; font-weight: 600; font-size: .8rem; letter-spacing: .04em; text-transform: uppercase; box-shadow: 0 14px 30px -12px rgba(192,67,47,.7); opacity: 0; transform: translateY(20px); pointer-events: none; transition: opacity .4s var(--ease), transform .4s var(--ease); }
+.float { position: fixed; bottom: 22px; right: calc(var(--rail) + 18px); z-index: 700; background: var(--red); color: #fff; padding: 14px 26px; border-radius: 100px; font-weight: 600; font-size: .8rem; letter-spacing: .04em; text-transform: uppercase; box-shadow: 0 14px 30px -12px rgba(192,67,47,.7); opacity: 0; transform: translateY(20px); pointer-events: none; transition: opacity .4s var(--ease), transform .4s var(--ease); }
 .float.is-on { opacity: 1; transform: none; pointer-events: auto; }
 
 /* ---------- reveal ---------- */
@@ -248,6 +255,7 @@ section h2, .menu__head h2, .gal__head h2 { font-family: var(--display); font-we
   .team__grid { max-width: 460px; }
 }
 @media (max-width: 600px) {
+  :root { --rail: 40px; }
   .price li { grid-template-columns: 1fr auto; }
   .price__dots, .price__desc { display: none; }
   .footer__cols { grid-template-columns: 1fr; gap: 22px; }

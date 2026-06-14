@@ -52,7 +52,7 @@
   scene.add(pole);
 
   /* scroll (hele sidens progresjon) + mus */
-  var raw = 0, spL = 0, mx = 0, my = 0, cmx = 0, cmy = 0;
+  var raw = 0, spL = 0, mx = 0, my = 0, cmx = 0, cmy = 0, railPx = 64;
   function onScroll() { var max = document.documentElement.scrollHeight - innerHeight; raw = max > 0 ? Math.min(Math.max(scrollY / max, 0), 1) : 0; }
   addEventListener("scroll", onScroll, { passive: true });
   addEventListener("mousemove", function (e) { mx = e.clientX / innerWidth - 0.5; my = e.clientY / innerHeight - 0.5; });
@@ -61,8 +61,10 @@
   function resize() {
     camera.aspect = innerWidth / innerHeight; camera.updateProjectionMatrix();
     renderer.setSize(innerWidth, innerHeight);
+    railPx = parseFloat(getComputedStyle(document.body).paddingRight) || 64;
   }
   addEventListener("resize", resize);
+  resize();
 
   function lerp(a, b, t) { return a + (b - a) * t; }
   function ease(t) { return 1 - Math.pow(1 - t, 3); }
@@ -79,16 +81,17 @@
     /* synlig ramme ved z=0 */
     var halfH = Math.tan((camera.fov * Math.PI / 180) / 2) * camera.position.z;
     var halfW = halfH * camera.aspect;
-    var mobile = innerWidth < 760;
+    var pxPerWorld = innerWidth / (2 * halfW);
 
-    /* stangen som scrollbar-indikator: følger scroll loddrett, pinnet til høyre kant */
-    pole.position.x = halfW * (mobile ? 0.82 : 0.88);
-    pole.position.y = lerp(halfH * 0.72, -halfH * 0.72, p);
-    pole.scale.setScalar(mobile ? 0.24 : 0.30);
+    /* stangen lever i sin egen reserverte «skinne» helt til høyre — dekker aldri innhold */
+    var screenX = innerWidth - railPx / 2;
+    pole.position.x = (screenX / innerWidth * 2 - 1) * halfW;
+    pole.position.y = lerp(halfH * 0.82, -halfH * 0.82, p);              // topp -> bunn med scroll
+    pole.scale.setScalar((railPx * 0.40) / (1.2 * pxPerWorld));          // fyller skinnen pent
 
-    if (!reduced) tex.offset.y -= 0.006 + p * 0.01;
-    pole.rotation.y = t * 0.45 + cmx * 0.3;   // spinner som et ekte skilt
-    pole.rotation.z = 0.1 + cmy * 0.04;
+    if (!reduced) tex.offset.y -= 0.006 + p * 0.012;
+    pole.rotation.y = t * 0.5 + p * 4;        // spinner, og raskere jo lenger du har scrollet
+    pole.rotation.z = 0.08;
     camera.lookAt(0, 0, 0);
 
     renderer.render(scene, camera);
