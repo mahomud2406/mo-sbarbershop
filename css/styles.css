@@ -89,8 +89,8 @@ section h2, .menu__head h2, .gal__head h2 { font-family: var(--display); font-we
 .hero__lead { max-width: 480px; color: var(--muted); font-size: 1.1rem; margin-bottom: 34px; }
 .hero__cta { display: flex; gap: 14px; flex-wrap: wrap; }
 .hero__stage { align-self: stretch; min-height: 60vh; }
-/* fullskjerm, gjennomsiktig lerret — selve stangen flyttes i 3D */
-.pole-stage { position: fixed; inset: 0; z-index: 5; pointer-events: none; }
+/* fullskjerm, gjennomsiktig lerret — alltid BAK alt innhold */
+.pole-stage { position: fixed; inset: 0; z-index: -1; pointer-events: none; }
 #gl { display: block; width: 100%; height: 100%; }
 .hero__foot { display: grid; grid-template-columns: repeat(4, 1fr); gap: 20px; border-top: 1.5px solid var(--line); padding: 26px 0; margin-top: auto; }
 .hero__foot b { display: block; font-family: var(--display); font-size: 2.4rem; line-height: 1; }
