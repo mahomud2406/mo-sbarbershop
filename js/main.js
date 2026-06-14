@@ -82,4 +82,17 @@
       el.addEventListener("mouseleave", function () { el.style.transform = ""; });
     });
   }
+
+  /* 3D-tilt på bilderammer — til en viss grad */
+  if (fine && !reduced) {
+    document.querySelectorAll("[data-tilt]").forEach(function (el) {
+      el.addEventListener("mousemove", function (e) {
+        var rct = el.getBoundingClientRect();
+        var px = (e.clientX - rct.left) / rct.width - 0.5;
+        var py = (e.clientY - rct.top) / rct.height - 0.5;
+        el.style.transform = "perspective(1000px) rotateY(" + (px * 6) + "deg) rotateX(" + (-py * 6) + "deg) translateY(-4px)";
+      });
+      el.addEventListener("mouseleave", function () { el.style.transform = ""; });
+    });
+  }
 })();
