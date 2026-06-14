@@ -81,10 +81,10 @@
     var halfW = halfH * camera.aspect;
     var mobile = innerWidth < 760;
 
-    // p=0: til høyre i heroen · p=1: pinnet øverst i høyre hjørne
-    var x0 = halfW * (mobile ? 0.30 : 0.42), y0 = -halfH * 0.04, s0 = mobile ? 0.74 : 0.9;
-    var x1 = halfW * (mobile ? 0.62 : 0.76), y1 = halfH * 0.66, s1 = mobile ? 0.42 : 0.5;
-    var bob = Math.sin(t * 1.2) * (1 - p) * 0.12;
+    // p=0: liten accent oppe til høyre (ikke i veien) · p=1: pinnet i hjørnet
+    var x0 = halfW * (mobile ? 0.52 : 0.60), y0 = halfH * (mobile ? 0.52 : 0.36), s0 = mobile ? 0.34 : 0.50;
+    var x1 = halfW * (mobile ? 0.64 : 0.78), y1 = halfH * 0.66, s1 = mobile ? 0.38 : 0.46;
+    var bob = Math.sin(t * 1.2) * (1 - p) * 0.08;
 
     pole.position.x = lerp(x0, x1, p);
     pole.position.y = lerp(y0, y1, p) + bob;
